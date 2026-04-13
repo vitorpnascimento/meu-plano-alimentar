@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#579DFF">
+    <title>Meu Plano - Dieta & Treino</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #579DFF; --dark: #1D2125; --card-bg: #22272B; --border: #2B3039; --text-primary: #DEE4EA; --text-secondary: #8C9BAB; --success: #4BCE97; --warning: #F87462; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1D2125 0%, #16202B 100%); color: var(--text-primary); min-height: 100vh; padding-bottom: 80px; }
+        header { background: rgba(29,33,37,0.95); border-bottom: 1px solid var(--border); padding: 20px; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
+        .header-content { max-width: 800px; margin: 0 auto; }
+        h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; background: linear-gradient(135deg, #579DFF, #85B8FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .subtitle { font-size: 13px; color: var(--text-secondary); }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border); overflow-x: auto; }
+        .tab-btn { padding: 12px 16px; background: none; border: none; color: var(--text-secondary); font-size: 14px; font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+        .card-title { font-size: 14px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+        .meal-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+        .meal-item:last-child { margin-bottom: 0; }
+        .checkbox { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; transition: all 0.2s; }
+        .checkbox.checked { background: var(--success); border-color: var(--success); }
+        .checkbox.checked::after { content: 'V'; color: white; font-size: 12px; font-weight: bold; }
+        .meal-content { flex: 1; }
+        .meal-name { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+        .meal-desc { font-size: 13px; color: var(--text-secondary); }
+        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+        .stat-box { background: rgba(87,157,255,0.1); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+        .stat-value { font-size: 28px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+        .stat-label { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; }
+        .input-group { margin-bottom: 16px; }
+        .input-group label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; }
+        .input-group input, .input-group textarea { width: 100%; background: var(--dark); border: 1px solid var(--border); color: var(--text-primary); padding: 10px 12px; border-radius: 6px; font-size: 14px; font-family: inherit; }
+        .btn { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; width: 100%; }
+        .reset-btn { background: var(--warning); margin-top: 20px; }
+        .weight-history { display: flex; flex-direction: column; gap: 8px; }
+        .weight-entry { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--dark); border-radius: 6px; border-left: 3px solid var(--primary); }
+        .weight-value { font-size: 18px; font-weight: 600; color: var(--primary); }
+        .weight-date { font-size: 12px; color: var(--text-secondary); }
+        .weight-change { font-size: 12px; color: var(--success); }
+        .timer { text-align: center; padding: 24px 0; }
+        .timer-display { font-size: 48px; font-weight: 700; color: var(--primary); font-family: monospace; margin-bottom: 20px; }
+        .timer-buttons { display: flex; gap: 12px; justify-content: center; }
+        .btn-small { padding: 8px 16px; font-size: 13px; flex: 1; max-width: 120px; }
+        .notes-section { background: var(--dark); border-radius: 6px; padding: 12px; margin-top: 8px; }
+        .note-item { padding: 8px; background: var(--card-bg); border-radius: 4px; border-left: 2px solid var(--primary); margin-bottom: 8px; font-size: 13px; }
+        footer { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(29,33,37,0.95); border-top: 1px solid var(--border); padding: 12px; text-align: center; font-size: 12px; color: var(--text-secondary); }
+    </style>
+</head>
+<body>
+    <header><div class="header-content"><h1>Meu Plano</h1><div class="subtitle">Acompanhamento de Dieta &amp; Treino</div></div></header>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('today',event)">Hoje</button>
+            <button class="tab-btn" onclick="switchTab('weight',event)">Peso</button>
+            <button class="tab-btn" onclick="switchTab('cardio',event)">Cardio</button>
+            <button class="tab-btn" onclick="switchTab('notes',event)">Notas</button>
+        </div>
+        <div id="today" class="tab-content active">
+            <div class="stats">
+                <div class="stat-box"><div class="stat-value" id="refeicoes-count">0</div><div class="stat-label">Refeicoes Hoje</div></div>
+                <div class="stat-box"><div class="stat-value" id="calorias-count">0</div><div class="stat-label">kcal</div></div>
+            </div>
+            <div class="card">
+                <div class="card-title">Refeicao 1 - Cafe da Manha (~400 kcal)</div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">2 ovos inteiros</div><div class="meal-desc">Proteina base do cafe</div></div></div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">2 fatias de pao ou 1 frances</div><div class="meal-desc">Carboidrato</div></div></div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">20-30g requeijao/cream cheese</div><div class="meal-desc">Gordura saudavel</div></div></div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">1 fruta (banana/maca/morango)</div><div class="meal-desc">Vitaminas</div></div></div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">Cafe sem acucar</div><div class="meal-desc">Bebida</div></div></div>
+            </div>
+            <div class="card">
+                <div class="card-title">Refeicao 2 - Almoco (~450 kcal)</div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">160g frango/carne magra</div><div class="meal-desc">Proteina principal</div></div></div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">150g arroz branco</div><div class="meal-desc">Carboidrato</div></div></div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">Vegetais cozidos a vontade</div><div class="meal-desc">Fibras e nutrientes</div></div></div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">Salada crua a vontade</div><div class="meal-desc">Volume e satisfacao</div></div></div>
+            </div>
+            <div class="card">
+                <div class="card-title">Refeicao 3 - Lanche (~350 kcal)</div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">2 fatias de pao ou 1 frances</div><div class="meal-desc">Base do lanche</div></div></div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">100g frango desfiado ou 4 fatias peru</div><div class="meal-desc">Proteina magra</div></div></div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">15g requeijao</div><div class="meal-desc">Tempero</div></div></div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">1 fruta pequena</div><div class="meal-desc">Sobremesa</div></div></div>
+            </div>
+            <div class="card">
+                <div class="card-title">Refeicao 4 - Jantar (~400 kcal)</div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">160g frango/peixe/carne magra</div><div class="meal-desc">Proteina principal</div></div></div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">120-150g arroz ou batata/aipim</div><div class="meal-desc">Carboidrato</div></div></div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">Vegetais + salada</div><div class="meal-desc">Fibras</div></div></div>
+            </div>
+            <div class="card">
+                <div class="card-title">Refeicao 5 - Ceia (~300 kcal)</div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">1 scoop whey (30g)</div><div class="meal-desc">Proteina em po</div></div></div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">1 iogurte natural (165g)</div><div class="meal-desc">Probioticos</div></div></div>
+                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">10-15g aveia (opcional)</div><div class="meal-desc">Carboidrato complexo</div></div></div>
+            </div>
+            <button class="btn reset-btn" onclick="resetDay()">Resetar Dia</button>
+        </div>
+        <div id="weight" class="tab-content">
+            <div class="card">
+                <div class="card-title">Registrar Peso</div>
+                <div class="input-group"><label>Peso (kg)</label><input type="number" id="weight-input" placeholder="100.5" step="0.1"></div>
+                <div class="input-group"><label>Data (deixe em branco para hoje)</label><input type="date" id="weight-date"></div>
+                <button class="btn" onclick="addWeight()">Registrar</button>
+            </div>
+            <div class="card"><div class="card-title">Historico</div><div id="weight-history" class="weight-history"><p style="color:var(--text-secondary);text-align:center;padding:20px">Nenhum registro ainda</p></div></div>
+            <div class="card"><div class="card-title">Meta Inicial</div><div class="stats"><div class="stat-box"><div class="stat-value">100kg</div><div class="stat-label">Peso Atual</div></div><div class="stat-box"><div class="stat-value" id="target-loss">-</div><div class="stat-label">Meta em 4 Semanas</div></div></div></div>
+        </div>
+        <div id="cardio" class="tab-content">
+            <div class="card">
+                <div class="card-title">Timer de Cardio</div>
+                <div class="input-group"><label>Minutos</label><input type="number" id="timer-minutes" placeholder="30" value="30" min="1" max="120"></div>
+                <div class="timer"><div class="timer-display" id="timer">30:00</div><div class="timer-buttons"><button class="btn btn-small" onclick="startTimer()">Iniciar</button><button class="btn btn-small reset-btn" onclick="resetTimer()">Resetar</button></div></div>
+            </div>
+            <div class="card"><div class="card-title">Plano Recomendado</div>
+                <div class="meal-item"><div class="meal-content"><div class="meal-name">Semanas 1-2</div><div class="meal-desc">20-30 min cardio, 4-5x por semana</div></div></div>
+                <div class="meal-item"><div class="meal-content"><div class="meal-name">Semana 3</div><div class="meal-desc">Avaliacao: continue ou ajuste intensidade</div></div></div>
+                <div class="meal-item"><div class="meal-content"><div class="meal-name">Semana 4</div><div class="meal-desc">Aumento progressivo ou manutencao</div></div></div>
+            </div>
+        </div>
+        <div id="notes" class="tab-content">
+            <div class="card"><div class="card-title">Adicionar Nota</div><div class="input-group"><label>Nota Rapida</label><textarea id="note-input" placeholder="Como voce se sentiu?" rows="3"></textarea></div><button class="btn" onclick="addNote()">Salvar Nota</button></div>
+            <div class="card"><div class="card-title">Minhas Notas</div><div id="notes-list" class="notes-section"><p style="color:var(--text-secondary);text-align:center;padding:20px">Nenhuma nota ainda</p></div></div>
+        </div>
+    </div>
+    <footer>Consistencia vence tudo. Voce consegue!</footer>
+    <script>
+        function switchTab(t,e){document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));document.getElementById(t).classList.add('active');if(e&&e.target)e.target.classList.add('active');if(t==='weight')updateWeightDisplay();if(t==='notes')updateNotesDisplay();}
+        function getToday(){return new Date().toISOString().split('T')[0];}
+        function saveData(){localStorage.setItem('dietAppData',JSON.stringify({meals:window.mealsData||{},weights:window.weightsData||{},notes:window.notesData||{}}));}
+        function loadData(){const d=JSON.parse(localStorage.getItem('dietAppData'))||{meals:{},weights:{},notes:{}};window.mealsData=d.meals;window.weightsData=d.weights;window.notesData=d.notes;updateMealsUI();}
+        function toggleMeal(el){el.classList.toggle('checked');updateMealsUI();saveData();}
+        function updateMealsUI(){const t=getToday();if(!window.mealsData[t])window.mealsData[t]={};let c=0;document.querySelectorAll('.checkbox').forEach((cb,i)=>{if(cb.classList.contains('checked')){window.mealsData[t][i]=true;c++;}else delete window.mealsData[t][i];});document.getElementById('refeicoes-count').textContent=c;document.getElementById('calorias-count').textContent=(c>0?c*380:0)+' aprox';}
+        function resetDay(){if(confirm('Resetar todas as refeicoes de hoje?')){delete window.mealsData[getToday()];document.querySelectorAll('.checkbox').forEach(cb=>cb.classList.remove('checked'));updateMealsUI();saveData();}}
+        function addWeight(){const w=parseFloat(document.getElementById('weight-input').value);const d=document.getElementById('weight-date').value||getToday();if(!w||w<=0){alert('Digite um peso valido');return;}window.weightsData[d]=w;saveData();document.getElementById('weight-input').value='';document.getElementById('weight-date').value='';updateWeightDisplay();}
+        function updateWeightDisplay(){const s=Object.entries(window.weightsData||{}).sort((a,b)=>new Date(b[0])-new Date(a[0]));const c=document.getElementById('weight-history');if(!s.length){c.innerHTML='<p style="color:var(--text-secondary);text-align:center;padding:20px">Nenhum registro ainda</p>';return;}c.innerHTML=s.map((e,i)=>{const[d,w]=e;const n=s[i+1]?.[1];const ch=n?(w-n).toFixed(1):0;const ct=ch>0?'Perdeu '+ch+'kg':(ch<0?'Ganhou '+Math.abs(ch)+'kg':'Primeira vez');const f=new Date(d+'T00:00:00').toLocaleDateString('pt-BR',{weekday:'short',month:'short',day:'numeric'});return '<div class="weight-entry"><div><div class="weight-value">'+w+'kg</div><div class="weight-date">'+f+'</div></div><div class="weight-change">'+ct+'</div></div>';}).join('');if(s.length){const l=(100-s[0][1]).toFixed(1);document.getElementById('target-loss').textContent=l+'kg';}}
+        let ti=null,tr=1800;
+        function startTimer(){const m=parseInt(document.getElementById('timer-minutes').value);if(!m||m<=0){alert('Digite um tempo valido');return;}tr=m*60;clearInterval(ti);ti=setInterval(()=>{tr--;updateTimerDisplay();if(tr<=0){clearInterval(ti);document.getElementById('timer').style.color='var(--success)';document.getElementById('timer').textContent='Feito!';}},1000);}
+        function resetTimer(){clearInterval(ti);tr=(parseInt(document.getElementById('timer-minutes').value)||30)*60;document.getElementById('timer').style.color='var(--primary)';updateTimerDisplay();}
+        function updateTimerDisplay(){const m=Math.floor(tr/60),s=tr%60;document.getElementById('timer').textContent=m+':'+(s<10?'0':'')+s;}
+        function addNote(){const t=document.getElementById('note-input').value;if(!t.trim()){alert('Escreva algo!');return;}const d=getToday();if(!window.notesData[d])window.notesData[d]=[];window.notesData[d].push({text:t,timestamp:new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})});saveData();document.getElementById('note-input').value='';updateNotesDisplay();}
+        function updateNotesDisplay(){const n=(window.notesData[getToday()]||[]).slice().reverse();const c=document.getElementById('notes-list');if(!n.length){c.innerHTML='<p style="color:var(--text-secondary);text-align:center;padding:20px">Nenhuma nota ainda</p>';return;}c.innerHTML=n.map(n=>'<div class="note-item"><strong>'+n.timestamp+'</strong><br>'+n.text+'</div>').join('');}
+        loadData();
+    </script>
+</body>
+</html>
