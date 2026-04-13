@@ -136,7 +136,40 @@
         function saveData(){localStorage.setItem('dietAppData',JSON.stringify({meals:window.mealsData||{},weights:window.weightsData||{},notes:window.notesData||{}}));}
         function loadData(){const d=JSON.parse(localStorage.getItem('dietAppData'))||{meals:{},weights:{},notes:{}};window.mealsData=d.meals;window.weightsData=d.weights;window.notesData=d.notes;updateMealsUI();}
         function toggleMeal(el){el.classList.toggle('checked');updateMealsUI();saveData();}
-        function updateMealsUI(){const t=getToday();if(!window.mealsData[t])window.mealsData[t]={};let c=0;document.querySelectorAll('.checkbox').forEach((cb,i)=>{if(cb.classList.contains('checked')){window.mealsData[t][i]=true;c++;}else delete window.mealsData[t][i];});document.getElementById('refeicoes-count').textContent=c;document.getElementById('calorias-count').textContent=(c>0?c*380:0)+' aprox';}
+        function updateMealsUI() {
+            const today = getToday();
+            const checkboxes = document.querySelectorAll('.checkbox');
+            if (!window.mealsData[today]) window.mealsData[today] = {};
+            const mealGroups = [5, 4, 4, 3, 3];
+            const mealCalsMap = [400, 450, 350, 400, 300];
+            let mealsCompleted = 0;
+            let totalCalories = 0;
+            checkboxes.forEach((cb, idx) => {
+                let mealIndex = 0;
+                let checkIdx = 0;
+                for (let i = 0; i < mealGroups.length; i++) {
+                    checkIdx += mealGroups[i];
+                    if (idx < checkIdx) { mealIndex = i; break; }
+                }
+                if (cb.classList.contains('checked')) {
+                    window.mealsData[today][idx] = true;
+                    totalCalories += mealCalsMap[mealIndex];
+                } else {
+                    delete window.mealsData[today][idx];
+                }
+            });
+            let checkedIdx = 0;
+            for (let meal = 0; meal < mealGroups.length; meal++) {
+                let allChecked = true;
+                for (let i = 0; i < mealGroups[meal]; i++) {
+                    if (!window.mealsData[today][checkedIdx + i]) { allChecked = false; break; }
+                }
+                if (allChecked) mealsCompleted++;
+                checkedIdx += mealGroups[meal];
+            }
+            document.getElementById('refeicoes-count').textContent = mealsCompleted;
+            document.getElementById('calorias-count').textContent = totalCalories + ' kcal';
+        }
         function resetDay(){if(confirm('Resetar todas as refeicoes de hoje?')){delete window.mealsData[getToday()];document.querySelectorAll('.checkbox').forEach(cb=>cb.classList.remove('checked'));updateMealsUI();saveData();}}
         function addWeight(){const w=parseFloat(document.getElementById('weight-input').value);const d=document.getElementById('weight-date').value||getToday();if(!w||w<=0){alert('Digite um peso valido');return;}window.weightsData[d]=w;saveData();document.getElementById('weight-input').value='';document.getElementById('weight-date').value='';updateWeightDisplay();}
         function updateWeightDisplay(){const s=Object.entries(window.weightsData||{}).sort((a,b)=>new Date(b[0])-new Date(a[0]));const c=document.getElementById('weight-history');if(!s.length){c.innerHTML='<p style="color:var(--text-secondary);text-align:center;padding:20px">Nenhum registro ainda</p>';return;}c.innerHTML=s.map((e,i)=>{const[d,w]=e;const n=s[i+1]?.[1];const ch=n?(w-n).toFixed(1):0;const ct=ch>0?'Perdeu '+ch+'kg':(ch<0?'Ganhou '+Math.abs(ch)+'kg':'Primeira vez');const f=new Date(d+'T00:00:00').toLocaleDateString('pt-BR',{weekday:'short',month:'short',day:'numeric'});return '<div class="weight-entry"><div><div class="weight-value">'+w+'kg</div><div class="weight-date">'+f+'</div></div><div class="weight-change">'+ct+'</div></div>';}).join('');if(s.length){const l=(100-s[0][1]).toFixed(1);document.getElementById('target-loss').textContent=l+'kg';}}
