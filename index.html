@@ -140,32 +140,32 @@
             const today = getToday();
             const checkboxes = document.querySelectorAll('.checkbox');
             if (!window.mealsData[today]) window.mealsData[today] = {};
+            const itemCalories = [
+                155, 150, 60, 25, 10,
+                280, 130, 20, 20,
+                150, 120, 45, 25,
+                280, 100, 20,
+                120, 165, 15
+            ];
             const mealGroups = [5, 4, 4, 3, 3];
-            const mealCalsMap = [400, 450, 350, 400, 300];
-            let mealsCompleted = 0;
             let totalCalories = 0;
+            let mealsCompleted = 0;
             checkboxes.forEach((cb, idx) => {
-                let mealIndex = 0;
-                let checkIdx = 0;
-                for (let i = 0; i < mealGroups.length; i++) {
-                    checkIdx += mealGroups[i];
-                    if (idx < checkIdx) { mealIndex = i; break; }
-                }
                 if (cb.classList.contains('checked')) {
                     window.mealsData[today][idx] = true;
-                    totalCalories += mealCalsMap[mealIndex];
+                    totalCalories += itemCalories[idx] || 0;
                 } else {
                     delete window.mealsData[today][idx];
                 }
             });
-            let checkedIdx = 0;
+            let checkIdx = 0;
             for (let meal = 0; meal < mealGroups.length; meal++) {
                 let allChecked = true;
                 for (let i = 0; i < mealGroups[meal]; i++) {
-                    if (!window.mealsData[today][checkedIdx + i]) { allChecked = false; break; }
+                    if (!window.mealsData[today][checkIdx + i]) { allChecked = false; break; }
                 }
                 if (allChecked) mealsCompleted++;
-                checkedIdx += mealGroups[meal];
+                checkIdx += mealGroups[meal];
             }
             document.getElementById('refeicoes-count').textContent = mealsCompleted;
             document.getElementById('calorias-count').textContent = totalCalories + ' kcal';
