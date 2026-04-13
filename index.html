@@ -4,181 +4,1406 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#579DFF">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Meu Plano">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23579DFF' width='180' height='180'/><text x='50%' y='55%' font-size='90' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='system-ui'>💪</text></svg>">
     <title>Meu Plano - Dieta & Treino</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { --primary: #579DFF; --dark: #1D2125; --card-bg: #22272B; --border: #2B3039; --text-primary: #DEE4EA; --text-secondary: #8C9BAB; --success: #4BCE97; --warning: #F87462; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1D2125 0%, #16202B 100%); color: var(--text-primary); min-height: 100vh; padding-bottom: 80px; }
-        header { background: rgba(29,33,37,0.95); border-bottom: 1px solid var(--border); padding: 20px; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
-        .header-content { max-width: 800px; margin: 0 auto; }
-        h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; background: linear-gradient(135deg, #579DFF, #85B8FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .subtitle { font-size: 13px; color: var(--text-secondary); }
-        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
-        .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border); overflow-x: auto; }
-        .tab-btn { padding: 12px 16px; background: none; border: none; color: var(--text-secondary); font-size: 14px; font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
-        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
-        .card-title { font-size: 14px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
-        .meal-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
-        .meal-item:last-child { margin-bottom: 0; }
-        .checkbox { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; transition: all 0.2s; }
-        .checkbox.checked { background: var(--success); border-color: var(--success); }
-        .checkbox.checked::after { content: 'V'; color: white; font-size: 12px; font-weight: bold; }
-        .meal-content { flex: 1; }
-        .meal-name { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
-        .meal-desc { font-size: 13px; color: var(--text-secondary); }
-        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-        .stat-box { background: rgba(87,157,255,0.1); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
-        .stat-value { font-size: 28px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
-        .stat-label { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; }
-        .input-group { margin-bottom: 16px; }
-        .input-group label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; }
-        .input-group input, .input-group textarea { width: 100%; background: var(--dark); border: 1px solid var(--border); color: var(--text-primary); padding: 10px 12px; border-radius: 6px; font-size: 14px; font-family: inherit; }
-        .btn { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; width: 100%; }
-        .reset-btn { background: var(--warning); margin-top: 20px; }
-        .weight-history { display: flex; flex-direction: column; gap: 8px; }
-        .weight-entry { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--dark); border-radius: 6px; border-left: 3px solid var(--primary); }
-        .weight-value { font-size: 18px; font-weight: 600; color: var(--primary); }
-        .weight-date { font-size: 12px; color: var(--text-secondary); }
-        .weight-change { font-size: 12px; color: var(--success); }
-        .timer { text-align: center; padding: 24px 0; }
-        .timer-display { font-size: 48px; font-weight: 700; color: var(--primary); font-family: monospace; margin-bottom: 20px; }
-        .timer-buttons { display: flex; gap: 12px; justify-content: center; }
-        .btn-small { padding: 8px 16px; font-size: 13px; flex: 1; max-width: 120px; }
-        .notes-section { background: var(--dark); border-radius: 6px; padding: 12px; margin-top: 8px; }
-        .note-item { padding: 8px; background: var(--card-bg); border-radius: 4px; border-left: 2px solid var(--primary); margin-bottom: 8px; font-size: 13px; }
-        footer { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(29,33,37,0.95); border-top: 1px solid var(--border); padding: 12px; text-align: center; font-size: 12px; color: var(--text-secondary); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #579DFF;
+            --dark: #1D2125;
+            --card-bg: #22272B;
+            --border: #2B3039;
+            --text-primary: #DEE4EA;
+            --text-secondary: #8C9BAB;
+            --success: #4BCE97;
+            --warning: #F87462;
+            --accent: #579DFF;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #1D2125 0%, #16202B 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        header {
+            background: rgba(29, 33, 37, 0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, #579DFF, #85B8FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            transition: all 0.2s;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            background: rgba(87, 157, 255, 0.05);
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .meal-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .meal-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+            transition: all 0.2s;
+            background: transparent;
+        }
+
+        .checkbox:hover {
+            border-color: var(--primary);
+        }
+
+        .checkbox.checked {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .meal-content {
+            flex: 1;
+        }
+
+        .meal-name {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .meal-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-box {
+            background: rgba(87, 157, 255, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .macros-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .macro-box {
+            background: var(--dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .macro-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .macro-value {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .macro-goal {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            transition: width 0.3s ease;
+        }
+
+        .day-complete-card {
+            background: linear-gradient(135deg, rgba(76, 206, 151, 0.2), rgba(87, 157, 255, 0.2));
+            border: 2px solid var(--success);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .day-complete-checkbox {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            transition: all 0.3s;
+            background: transparent;
+            font-size: 24px;
+        }
+
+        .day-complete-checkbox:hover {
+            border-color: var(--success);
+        }
+
+        .day-complete-checkbox.checked {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .day-complete-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+        }
+
+        .day-complete-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            background: var(--dark);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 12px;
+            font-weight: 500;
+            flex-direction: column;
+            padding: 4px;
+            text-align: center;
+        }
+
+        .calendar-day:hover {
+            border-color: var(--primary);
+        }
+
+        .calendar-day.trained {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .calendar-day-number {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .calendar-day-icon {
+            font-size: 16px;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #85B8FF;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(87, 157, 255, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+            width: auto;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: var(--dark);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+
+        .chart-container {
+            background: var(--dark);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .feedback-box {
+            background: linear-gradient(135deg, rgba(76, 206, 151, 0.1), rgba(87, 157, 255, 0.1));
+            border-left: 4px solid var(--success);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .feedback-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--success);
+            margin-bottom: 4px;
+        }
+
+        .feedback-text {
+            font-size: 13px;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(29, 33, 37, 0.95);
+            border-top: 1px solid var(--border);
+            padding: 12px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 16px;
+            }
+
+            .macros-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-value {
+                font-size: 24px;
+            }
+        }
     </style>
 </head>
 <body>
-    <header><div class="header-content"><h1>Meu Plano</h1><div class="subtitle">Acompanhamento de Dieta &amp; Treino</div></div></header>
+    <header>
+        <div class="header-content">
+            <h1>💪 Meu Plano</h1>
+            <div class="subtitle">Acompanhamento de Dieta & Treino</div>
+        </div>
+    </header>
+
     <div class="container">
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('today',event)">Hoje</button>
-            <button class="tab-btn" onclick="switchTab('weight',event)">Peso</button>
-            <button class="tab-btn" onclick="switchTab('cardio',event)">Cardio</button>
-            <button class="tab-btn" onclick="switchTab('notes',event)">Notas</button>
+            <button class="tab-btn active" onclick="switchTab('today')">Hoje</button>
+            <button class="tab-btn" onclick="switchTab('treino')">Treino</button>
+            <button class="tab-btn" onclick="switchTab('dashboard')">Dashboard</button>
+            <button class="tab-btn" onclick="switchTab('peso')">Peso</button>
+            <button class="tab-btn" onclick="switchTab('notas')">Notas</button>
         </div>
+
+        <!-- TAB: HOJE -->
         <div id="today" class="tab-content active">
+            <!-- Dia Completo -->
+            <div class="day-complete-card">
+                <div class="day-complete-checkbox" id="day-complete-btn" onclick="toggleDayComplete()"></div>
+                <div class="day-complete-text">Dia Cumprido: <span id="day-status">Não</span></div>
+            </div>
+
+            <!-- Stats Rápidos -->
             <div class="stats">
-                <div class="stat-box"><div class="stat-value" id="refeicoes-count">0</div><div class="stat-label">Refeicoes Hoje</div></div>
-                <div class="stat-box"><div class="stat-value" id="calorias-count">0</div><div class="stat-label">kcal</div></div>
+                <div class="stat-box">
+                    <div class="stat-value" id="refeicoes-count">0/5</div>
+                    <div class="stat-label">Refeições</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="calorias-count">0</div>
+                    <div class="stat-label">kcal</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="meta-percent">0%</div>
+                    <div class="stat-label">Meta</div>
+                </div>
             </div>
+
+            <!-- Macros em Tempo Real -->
             <div class="card">
-                <div class="card-title">Refeicao 1 - Cafe da Manha (~400 kcal)</div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">2 ovos inteiros</div><div class="meal-desc">Proteina base do cafe</div></div></div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">2 fatias de pao ou 1 frances</div><div class="meal-desc">Carboidrato</div></div></div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">20-30g requeijao/cream cheese</div><div class="meal-desc">Gordura saudavel</div></div></div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">1 fruta (banana/maca/morango)</div><div class="meal-desc">Vitaminas</div></div></div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">Cafe sem acucar</div><div class="meal-desc">Bebida</div></div></div>
+                <div class="card-title">Macronutrientes (Tempo Real)</div>
+                <div class="macros-grid">
+                    <div class="macro-box">
+                        <div class="macro-label">Proteína</div>
+                        <div class="macro-value" id="protein-value">0g</div>
+                        <div class="macro-goal">Meta: 195g</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="protein-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="macro-box">
+                        <div class="macro-label">Carboidrato</div>
+                        <div class="macro-value" id="carb-value">0g</div>
+                        <div class="macro-goal">Meta: 245g</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="carb-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="macro-box">
+                        <div class="macro-label">Gordura</div>
+                        <div class="macro-value" id="fat-value">0g</div>
+                        <div class="macro-goal">Meta: 63g</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="fat-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- Refeições -->
             <div class="card">
-                <div class="card-title">Refeicao 2 - Almoco (~450 kcal)</div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">160g frango/carne magra</div><div class="meal-desc">Proteina principal</div></div></div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">150g arroz branco</div><div class="meal-desc">Carboidrato</div></div></div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">Vegetais cozidos a vontade</div><div class="meal-desc">Fibras e nutrientes</div></div></div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">Salada crua a vontade</div><div class="meal-desc">Volume e satisfacao</div></div></div>
+                <div class="card-title">Refeição 1 - Café da Manhã (400 kcal)</div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">2 ovos inteiros</div>
+                        <div class="meal-desc">155 kcal | P: 12g C: 1g G: 11g</div>
+                    </div>
+                </div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">2 fatias de pão ou 1 francês</div>
+                        <div class="meal-desc">150 kcal | P: 5g C: 28g G: 2g</div>
+                    </div>
+                </div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">20-30g requeijão/cream cheese</div>
+                        <div class="meal-desc">60 kcal | P: 3g C: 1g G: 5g</div>
+                    </div>
+                </div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">1 fruta (banana/maçã/morango)</div>
+                        <div class="meal-desc">25 kcal | P: 0g C: 6g G: 0g</div>
+                    </div>
+                </div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">Café sem açúcar</div>
+                        <div class="meal-desc">10 kcal | P: 0g C: 2g G: 0g</div>
+                    </div>
+                </div>
             </div>
+
             <div class="card">
-                <div class="card-title">Refeicao 3 - Lanche (~350 kcal)</div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">2 fatias de pao ou 1 frances</div><div class="meal-desc">Base do lanche</div></div></div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">100g frango desfiado ou 4 fatias peru</div><div class="meal-desc">Proteina magra</div></div></div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">15g requeijao</div><div class="meal-desc">Tempero</div></div></div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">1 fruta pequena</div><div class="meal-desc">Sobremesa</div></div></div>
+                <div class="card-title">Refeição 2 - Almoço (450 kcal)</div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">160g frango/carne magra</div>
+                        <div class="meal-desc">280 kcal | P: 52g C: 0g G: 8g</div>
+                    </div>
+                </div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">150g arroz branco</div>
+                        <div class="meal-desc">130 kcal | P: 3g C: 28g G: 0g</div>
+                    </div>
+                </div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">Vegetais cozidos à vontade</div>
+                        <div class="meal-desc">20 kcal | P: 1g C: 4g G: 0g</div>
+                    </div>
+                </div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">Salada crua à vontade</div>
+                        <div class="meal-desc">20 kcal | P: 1g C: 4g G: 0g</div>
+                    </div>
+                </div>
             </div>
+
             <div class="card">
-                <div class="card-title">Refeicao 4 - Jantar (~400 kcal)</div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">160g frango/peixe/carne magra</div><div class="meal-desc">Proteina principal</div></div></div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">120-150g arroz ou batata/aipim</div><div class="meal-desc">Carboidrato</div></div></div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">Vegetais + salada</div><div class="meal-desc">Fibras</div></div></div>
+                <div class="card-title">Refeição 3 - Lanche (350 kcal)</div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">2 fatias de pão ou 1 francês</div>
+                        <div class="meal-desc">150 kcal | P: 5g C: 28g G: 2g</div>
+                    </div>
+                </div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">100g frango desfiado ou 4 fatias peru</div>
+                        <div class="meal-desc">120 kcal | P: 24g C: 0g G: 2g</div>
+                    </div>
+                </div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">15g requeijão</div>
+                        <div class="meal-desc">45 kcal | P: 2g C: 0g G: 4g</div>
+                    </div>
+                </div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">1 fruta pequena</div>
+                        <div class="meal-desc">25 kcal | P: 0g C: 6g G: 0g</div>
+                    </div>
+                </div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">10g castanha/amêndoa (extra)</div>
+                        <div class="meal-desc">10 kcal | P: 0g C: 0g G: 1g</div>
+                    </div>
+                </div>
             </div>
+
             <div class="card">
-                <div class="card-title">Refeicao 5 - Ceia (~300 kcal)</div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">1 scoop whey (30g)</div><div class="meal-desc">Proteina em po</div></div></div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">1 iogurte natural (165g)</div><div class="meal-desc">Probioticos</div></div></div>
-                <div class="meal-item"><div class="checkbox" onclick="toggleMeal(this)"></div><div class="meal-content"><div class="meal-name">10-15g aveia (opcional)</div><div class="meal-desc">Carboidrato complexo</div></div></div>
+                <div class="card-title">Refeição 4 - Jantar (400 kcal)</div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">160g frango/peixe/carne magra</div>
+                        <div class="meal-desc">280 kcal | P: 52g C: 0g G: 8g</div>
+                    </div>
+                </div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">120-150g arroz ou batata/aipim</div>
+                        <div class="meal-desc">100 kcal | P: 2g C: 23g G: 0g</div>
+                    </div>
+                </div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">Vegetais + salada</div>
+                        <div class="meal-desc">20 kcal | P: 1g C: 4g G: 0g</div>
+                    </div>
+                </div>
             </div>
-            <button class="btn reset-btn" onclick="resetDay()">Resetar Dia</button>
+
+            <div class="card">
+                <div class="card-title">Refeição 5 - Ceia (300 kcal)</div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">1 scoop whey (30g)</div>
+                        <div class="meal-desc">120 kcal | P: 25g C: 2g G: 1g</div>
+                    </div>
+                </div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">1 iogurte natural (165g)</div>
+                        <div class="meal-desc">165 kcal | P: 20g C: 12g G: 4g</div>
+                    </div>
+                </div>
+                <div class="meal-item">
+                    <div class="checkbox" onclick="toggleMeal(this)"></div>
+                    <div class="meal-content">
+                        <div class="meal-name">10-15g aveia (opcional)</div>
+                        <div class="meal-desc">15 kcal | P: 0g C: 3g G: 0g</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" onclick="resetDay()" style="background: var(--warning); margin-top: 20px;">Resetar Dia</button>
         </div>
-        <div id="weight" class="tab-content">
+
+        <!-- TAB: TREINO -->
+        <div id="treino" class="tab-content">
+            <div class="card">
+                <div class="card-title">Calendário de Treinos - Abril 2026</div>
+                <div class="calendar" id="training-calendar"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Informações</div>
+                <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">
+                    Clique nos dias do calendário para marcar quando você treinou. Os dias marcados em verde indicam que você treinou naquele dia.
+                </p>
+            </div>
+        </div>
+
+        <!-- TAB: DASHBOARD -->
+        <div id="dashboard" class="tab-content">
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="changePeriod('day')">Hoje</button>
+                <button class="filter-btn" onclick="changePeriod('week')">Semana</button>
+                <button class="filter-btn" onclick="changePeriod('month')">Mês</button>
+            </div>
+
+            <!-- Dia -->
+            <div id="period-day" class="period-view">
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="stat-value" id="day-completed">Não</div>
+                        <div class="stat-label">Dia Completo</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="day-calories">0</div>
+                        <div class="stat-label">kcal</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="day-trained">Não</div>
+                        <div class="stat-label">Treinou</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Macronutrientes do Dia</div>
+                    <div class="macros-grid">
+                        <div class="macro-box">
+                            <div class="macro-label">Proteína</div>
+                            <div class="macro-value" id="day-protein">0g / 195g</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="day-protein-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="macro-box">
+                            <div class="macro-label">Carboidrato</div>
+                            <div class="macro-value" id="day-carb">0g / 245g</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="day-carb-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="macro-box">
+                            <div class="macro-label">Gordura</div>
+                            <div class="macro-value" id="day-fat">0g / 63g</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="day-fat-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Feedback</div>
+                    <div id="day-feedback"></div>
+                </div>
+            </div>
+
+            <!-- Semana -->
+            <div id="period-week" class="period-view" style="display: none;">
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="stat-value" id="week-completed">0/7</div>
+                        <div class="stat-label">Dias Completos</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="week-trained">0/21</div>
+                        <div class="stat-label">Treinos</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="week-avg-cal">0</div>
+                        <div class="stat-label">Kcal Média</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Macronutrientes Semanais</div>
+                    <div class="macros-grid">
+                        <div class="macro-box">
+                            <div class="macro-label">Proteína</div>
+                            <div class="macro-value" id="week-protein">0g</div>
+                            <div class="macro-goal">Meta: 1365g</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="week-protein-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="macro-box">
+                            <div class="macro-label">Carboidrato</div>
+                            <div class="macro-value" id="week-carb">0g</div>
+                            <div class="macro-goal">Meta: 1715g</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="week-carb-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="macro-box">
+                            <div class="macro-label">Gordura</div>
+                            <div class="macro-value" id="week-fat">0g</div>
+                            <div class="macro-goal">Meta: 441g</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="week-fat-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Histórico de Dias</div>
+                    <div id="week-history"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Feedback Semanal</div>
+                    <div id="week-feedback"></div>
+                </div>
+            </div>
+
+            <!-- Mês -->
+            <div id="period-month" class="period-view" style="display: none;">
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="stat-value" id="month-completed">0/30</div>
+                        <div class="stat-label">Dias Completos</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="month-trained">0/90</div>
+                        <div class="stat-label">Treinos</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="month-avg-cal">0</div>
+                        <div class="stat-label">Kcal Média</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Macronutrientes Mensais</div>
+                    <div class="macros-grid">
+                        <div class="macro-box">
+                            <div class="macro-label">Proteína</div>
+                            <div class="macro-value" id="month-protein">0g</div>
+                            <div class="macro-goal">Meta: 5850g</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="month-protein-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="macro-box">
+                            <div class="macro-label">Carboidrato</div>
+                            <div class="macro-value" id="month-carb">0g</div>
+                            <div class="macro-goal">Meta: 7350g</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="month-carb-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="macro-box">
+                            <div class="macro-label">Gordura</div>
+                            <div class="macro-value" id="month-fat">0g</div>
+                            <div class="macro-goal">Meta: 1890g</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="month-fat-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Feedback Mensal</div>
+                    <div id="month-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: PESO -->
+        <div id="peso" class="tab-content">
             <div class="card">
                 <div class="card-title">Registrar Peso</div>
-                <div class="input-group"><label>Peso (kg)</label><input type="number" id="weight-input" placeholder="100.5" step="0.1"></div>
-                <div class="input-group"><label>Data (deixe em branco para hoje)</label><input type="date" id="weight-date"></div>
+                <div style="margin-bottom: 12px;">
+                    <label style="display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Peso (kg)</label>
+                    <input type="number" id="weight-input" placeholder="100.5" step="0.1" style="width: 100%; padding: 10px 12px; background: var(--dark); border: 1px solid var(--border); color: var(--text-primary); border-radius: 6px; font-size: 14px;">
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <label style="display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Data</label>
+                    <input type="date" id="weight-date" style="width: 100%; padding: 10px 12px; background: var(--dark); border: 1px solid var(--border); color: var(--text-primary); border-radius: 6px; font-size: 14px;">
+                </div>
                 <button class="btn" onclick="addWeight()">Registrar</button>
             </div>
-            <div class="card"><div class="card-title">Historico</div><div id="weight-history" class="weight-history"><p style="color:var(--text-secondary);text-align:center;padding:20px">Nenhum registro ainda</p></div></div>
-            <div class="card"><div class="card-title">Meta Inicial</div><div class="stats"><div class="stat-box"><div class="stat-value">100kg</div><div class="stat-label">Peso Atual</div></div><div class="stat-box"><div class="stat-value" id="target-loss">-</div><div class="stat-label">Meta em 4 Semanas</div></div></div></div>
-        </div>
-        <div id="cardio" class="tab-content">
+
             <div class="card">
-                <div class="card-title">Timer de Cardio</div>
-                <div class="input-group"><label>Minutos</label><input type="number" id="timer-minutes" placeholder="30" value="30" min="1" max="120"></div>
-                <div class="timer"><div class="timer-display" id="timer">30:00</div><div class="timer-buttons"><button class="btn btn-small" onclick="startTimer()">Iniciar</button><button class="btn btn-small reset-btn" onclick="resetTimer()">Resetar</button></div></div>
-            </div>
-            <div class="card"><div class="card-title">Plano Recomendado</div>
-                <div class="meal-item"><div class="meal-content"><div class="meal-name">Semanas 1-2</div><div class="meal-desc">20-30 min cardio, 4-5x por semana</div></div></div>
-                <div class="meal-item"><div class="meal-content"><div class="meal-name">Semana 3</div><div class="meal-desc">Avaliacao: continue ou ajuste intensidade</div></div></div>
-                <div class="meal-item"><div class="meal-content"><div class="meal-name">Semana 4</div><div class="meal-desc">Aumento progressivo ou manutencao</div></div></div>
+                <div class="card-title">Histórico</div>
+                <div id="weight-history" style="display: flex; flex-direction: column; gap: 8px;">
+                    <p style="color: var(--text-secondary); text-align: center; padding: 20px;">Nenhum registro ainda</p>
+                </div>
             </div>
         </div>
-        <div id="notes" class="tab-content">
-            <div class="card"><div class="card-title">Adicionar Nota</div><div class="input-group"><label>Nota Rapida</label><textarea id="note-input" placeholder="Como voce se sentiu?" rows="3"></textarea></div><button class="btn" onclick="addNote()">Salvar Nota</button></div>
-            <div class="card"><div class="card-title">Minhas Notas</div><div id="notes-list" class="notes-section"><p style="color:var(--text-secondary);text-align:center;padding:20px">Nenhuma nota ainda</p></div></div>
+
+        <!-- TAB: NOTAS -->
+        <div id="notas" class="tab-content">
+            <div class="card">
+                <div class="card-title">Adicionar Nota</div>
+                <div style="margin-bottom: 12px;">
+                    <label style="display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Nota Rápida</label>
+                    <textarea id="note-input" placeholder="Como você se sentiu? Comeu fora? Dicas?" rows="3" style="width: 100%; padding: 10px 12px; background: var(--dark); border: 1px solid var(--border); color: var(--text-primary); border-radius: 6px; font-size: 14px; font-family: inherit;"></textarea>
+                </div>
+                <button class="btn" onclick="addNote()">Salvar Nota</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Minhas Notas</div>
+                <div id="notes-list" style="display: flex; flex-direction: column; gap: 8px;">
+                    <p style="color: var(--text-secondary); text-align: center; padding: 20px;">Nenhuma nota ainda</p>
+                </div>
+            </div>
         </div>
     </div>
-    <footer>Consistencia vence tudo. Voce consegue!</footer>
+
+    <footer>
+        💪 Consistência vence tudo. Você consegue!
+    </footer>
+
     <script>
-        function switchTab(t,e){document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));document.getElementById(t).classList.add('active');if(e&&e.target)e.target.classList.add('active');if(t==='weight')updateWeightDisplay();if(t==='notes')updateNotesDisplay();}
-        function getToday(){return new Date().toISOString().split('T')[0];}
-        function saveData(){localStorage.setItem('dietAppData',JSON.stringify({meals:window.mealsData||{},weights:window.weightsData||{},notes:window.notesData||{}}));}
-        function loadData(){const d=JSON.parse(localStorage.getItem('dietAppData'))||{meals:{},weights:{},notes:{}};window.mealsData=d.meals;window.weightsData=d.weights;window.notesData=d.notes;updateMealsUI();}
-        function toggleMeal(el){el.classList.toggle('checked');updateMealsUI();saveData();}
+        // ===== DADOS ESTRUTURA =====
+        const MACROS_PER_ITEM = [
+            // Café (5 itens)
+            { kcal: 155, p: 12, c: 1, f: 11 },
+            { kcal: 150, p: 5, c: 28, f: 2 },
+            { kcal: 60, p: 3, c: 1, f: 5 },
+            { kcal: 25, p: 0, c: 6, f: 0 },
+            { kcal: 10, p: 0, c: 2, f: 0 },
+            // Almoço (4 itens)
+            { kcal: 280, p: 52, c: 0, f: 8 },
+            { kcal: 130, p: 3, c: 28, f: 0 },
+            { kcal: 20, p: 1, c: 4, f: 0 },
+            { kcal: 20, p: 1, c: 4, f: 0 },
+            // Lanche (5 itens)
+            { kcal: 150, p: 5, c: 28, f: 2 },
+            { kcal: 120, p: 24, c: 0, f: 2 },
+            { kcal: 45, p: 2, c: 0, f: 4 },
+            { kcal: 25, p: 0, c: 6, f: 0 },
+            { kcal: 10, p: 0, c: 0, f: 1 },
+            // Jantar (3 itens)
+            { kcal: 280, p: 52, c: 0, f: 8 },
+            { kcal: 100, p: 2, c: 23, f: 0 },
+            { kcal: 20, p: 1, c: 4, f: 0 },
+            // Ceia (3 itens)
+            { kcal: 120, p: 25, c: 2, f: 1 },
+            { kcal: 165, p: 20, c: 12, f: 4 },
+            { kcal: 15, p: 0, c: 3, f: 0 }
+        ];
+
+        const MEAL_GROUPS = [5, 4, 5, 3, 3];
+        const MACRO_GOALS = { p: 195, c: 245, f: 63 };
+
+        function getToday() {
+            const today = new Date();
+            return today.toISOString().split('T')[0];
+        }
+
+        function saveData() {
+            const data = {
+                meals: window.mealsData || {},
+                dayComplete: window.dayComplete || {},
+                training: window.trainingData || {},
+                weights: window.weightsData || {},
+                notes: window.notesData || {}
+            };
+            localStorage.setItem('dietAppData', JSON.stringify(data));
+        }
+
+        function loadData() {
+            const data = JSON.parse(localStorage.getItem('dietAppData')) || { meals: {}, dayComplete: {}, training: {}, weights: {}, notes: {} };
+            window.mealsData = data.meals;
+            window.dayComplete = data.dayComplete;
+            window.trainingData = data.training;
+            window.weightsData = data.weights;
+            window.notesData = data.notes;
+            updateUI();
+        }
+
+        // ===== TABS =====
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'treino') buildCalendar();
+            if (tabName === 'dashboard') updateDashboard();
+        }
+
+        // ===== MEALS =====
+        function toggleMeal(el) {
+            el.classList.toggle('checked');
+            updateUI();
+            saveData();
+        }
+
+        function updateUI() {
+            updateMealsUI();
+            updateDayCompleteUI();
+        }
+
         function updateMealsUI() {
             const today = getToday();
-            const checkboxes = document.querySelectorAll('.checkbox');
-            if (!window.mealsData[today]) window.mealsData[today] = {};
-            const itemCalories = [
-                155, 150, 60, 25, 10,
-                280, 130, 20, 20,
-                150, 120, 45, 25,
-                280, 100, 20,
-                120, 165, 15
-            ];
-            const mealGroups = [5, 4, 4, 3, 3];
-            let totalCalories = 0;
-            let mealsCompleted = 0;
-            checkboxes.forEach((cb, idx) => {
-                if (cb.classList.contains('checked')) {
-                    window.mealsData[today][idx] = true;
-                    totalCalories += itemCalories[idx] || 0;
-                } else {
-                    delete window.mealsData[today][idx];
-                }
-            });
-            let checkIdx = 0;
-            for (let meal = 0; meal < mealGroups.length; meal++) {
-                let allChecked = true;
-                for (let i = 0; i < mealGroups[meal]; i++) {
-                    if (!window.mealsData[today][checkIdx + i]) { allChecked = false; break; }
-                }
-                if (allChecked) mealsCompleted++;
-                checkIdx += mealGroups[meal];
+            const checkboxes = document.querySelectorAll('#today .checkbox');
+            
+            if (!window.mealsData[today]) {
+                window.mealsData[today] = {};
             }
-            document.getElementById('refeicoes-count').textContent = mealsCompleted;
-            document.getElementById('calorias-count').textContent = totalCalories + ' kcal';
+
+            let totalCals = 0, totalP = 0, totalC = 0, totalF = 0;
+            let mealsCompleted = 0;
+
+            let itemIdx = 0;
+            for (let meal = 0; meal < MEAL_GROUPS.length; meal++) {
+                let mealItemsChecked = 0;
+                let mealCals = 0, mealP = 0, mealC = 0, mealF = 0;
+
+                for (let i = 0; i < MEAL_GROUPS[meal]; i++) {
+                    if (checkboxes[itemIdx].classList.contains('checked')) {
+                        window.mealsData[today][itemIdx] = true;
+                        mealItemsChecked++;
+                        mealCals += MACROS_PER_ITEM[itemIdx].kcal;
+                        mealP += MACROS_PER_ITEM[itemIdx].p;
+                        mealC += MACROS_PER_ITEM[itemIdx].c;
+                        mealF += MACROS_PER_ITEM[itemIdx].f;
+                    } else {
+                        delete window.mealsData[today][itemIdx];
+                    }
+                    itemIdx++;
+                }
+
+                if (mealItemsChecked === MEAL_GROUPS[meal]) {
+                    mealsCompleted++;
+                }
+
+                totalCals += mealCals;
+                totalP += mealP;
+                totalC += mealC;
+                totalF += mealF;
+            }
+
+            document.getElementById('refeicoes-count').textContent = `${mealsCompleted}/5`;
+            document.getElementById('calorias-count').textContent = totalCals;
+            document.getElementById('meta-percent').textContent = Math.min(100, Math.round((totalCals / 1900) * 100)) + '%';
+
+            document.getElementById('protein-value').textContent = totalP + 'g';
+            document.getElementById('protein-bar').style.width = Math.min(100, (totalP / MACRO_GOALS.p) * 100) + '%';
+
+            document.getElementById('carb-value').textContent = totalC + 'g';
+            document.getElementById('carb-bar').style.width = Math.min(100, (totalC / MACRO_GOALS.c) * 100) + '%';
+
+            document.getElementById('fat-value').textContent = totalF + 'g';
+            document.getElementById('fat-bar').style.width = Math.min(100, (totalF / MACRO_GOALS.f) * 100) + '%';
         }
-        function resetDay(){if(confirm('Resetar todas as refeicoes de hoje?')){delete window.mealsData[getToday()];document.querySelectorAll('.checkbox').forEach(cb=>cb.classList.remove('checked'));updateMealsUI();saveData();}}
-        function addWeight(){const w=parseFloat(document.getElementById('weight-input').value);const d=document.getElementById('weight-date').value||getToday();if(!w||w<=0){alert('Digite um peso valido');return;}window.weightsData[d]=w;saveData();document.getElementById('weight-input').value='';document.getElementById('weight-date').value='';updateWeightDisplay();}
-        function updateWeightDisplay(){const s=Object.entries(window.weightsData||{}).sort((a,b)=>new Date(b[0])-new Date(a[0]));const c=document.getElementById('weight-history');if(!s.length){c.innerHTML='<p style="color:var(--text-secondary);text-align:center;padding:20px">Nenhum registro ainda</p>';return;}c.innerHTML=s.map((e,i)=>{const[d,w]=e;const n=s[i+1]?.[1];const ch=n?(w-n).toFixed(1):0;const ct=ch>0?'Perdeu '+ch+'kg':(ch<0?'Ganhou '+Math.abs(ch)+'kg':'Primeira vez');const f=new Date(d+'T00:00:00').toLocaleDateString('pt-BR',{weekday:'short',month:'short',day:'numeric'});return '<div class="weight-entry"><div><div class="weight-value">'+w+'kg</div><div class="weight-date">'+f+'</div></div><div class="weight-change">'+ct+'</div></div>';}).join('');if(s.length){const l=(100-s[0][1]).toFixed(1);document.getElementById('target-loss').textContent=l+'kg';}}
-        let ti=null,tr=1800;
-        function startTimer(){const m=parseInt(document.getElementById('timer-minutes').value);if(!m||m<=0){alert('Digite um tempo valido');return;}tr=m*60;clearInterval(ti);ti=setInterval(()=>{tr--;updateTimerDisplay();if(tr<=0){clearInterval(ti);document.getElementById('timer').style.color='var(--success)';document.getElementById('timer').textContent='Feito!';}},1000);}
-        function resetTimer(){clearInterval(ti);tr=(parseInt(document.getElementById('timer-minutes').value)||30)*60;document.getElementById('timer').style.color='var(--primary)';updateTimerDisplay();}
-        function updateTimerDisplay(){const m=Math.floor(tr/60),s=tr%60;document.getElementById('timer').textContent=m+':'+(s<10?'0':'')+s;}
-        function addNote(){const t=document.getElementById('note-input').value;if(!t.trim()){alert('Escreva algo!');return;}const d=getToday();if(!window.notesData[d])window.notesData[d]=[];window.notesData[d].push({text:t,timestamp:new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})});saveData();document.getElementById('note-input').value='';updateNotesDisplay();}
-        function updateNotesDisplay(){const n=(window.notesData[getToday()]||[]).slice().reverse();const c=document.getElementById('notes-list');if(!n.length){c.innerHTML='<p style="color:var(--text-secondary);text-align:center;padding:20px">Nenhuma nota ainda</p>';return;}c.innerHTML=n.map(n=>'<div class="note-item"><strong>'+n.timestamp+'</strong><br>'+n.text+'</div>').join('');}
+
+        function resetDay() {
+            if (confirm('Resetar refeições de hoje?')) {
+                const today = getToday();
+                delete window.mealsData[today];
+                document.querySelectorAll('#today .checkbox').forEach(cb => cb.classList.remove('checked'));
+                updateUI();
+                saveData();
+            }
+        }
+
+        // ===== DIA COMPLETO =====
+        function toggleDayComplete() {
+            const today = getToday();
+            window.dayComplete[today] = !window.dayComplete[today];
+            updateDayCompleteUI();
+            saveData();
+        }
+
+        function updateDayCompleteUI() {
+            const today = getToday();
+            const btn = document.getElementById('day-complete-btn');
+            const status = document.getElementById('day-status');
+
+            if (window.dayComplete[today]) {
+                btn.classList.add('checked');
+                status.textContent = 'Sim ✓';
+                status.style.color = 'var(--success)';
+            } else {
+                btn.classList.remove('checked');
+                status.textContent = 'Não';
+                status.style.color = 'var(--text-secondary)';
+            }
+        }
+
+        // ===== TREINO =====
+        function buildCalendar() {
+            const container = document.getElementById('training-calendar');
+            container.innerHTML = '';
+
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = today.getMonth();
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.style.opacity = '0.3';
+                container.appendChild(emptyDiv);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day';
+                if (window.trainingData[dateStr]) dayEl.classList.add('trained');
+
+                dayEl.innerHTML = `<div class="calendar-day-number">${day}</div><div class="calendar-day-icon">${window.trainingData[dateStr] ? '💪' : ''}</div>`;
+                dayEl.onclick = () => toggleTraining(dateStr, dayEl);
+                container.appendChild(dayEl);
+            }
+        }
+
+        function toggleTraining(dateStr, el) {
+            window.trainingData[dateStr] = !window.trainingData[dateStr];
+            el.classList.toggle('trained');
+            saveData();
+        }
+
+        // ===== DASHBOARD =====
+        function changePeriod(period) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.period-view').forEach(v => v.style.display = 'none');
+            document.getElementById(`period-${period}`).style.display = 'block';
+
+            updateDashboard();
+        }
+
+        function updateDashboard() {
+            const today = getToday();
+
+            // Dia
+            const dayMeals = window.mealsData[today] || {};
+            let dayCals = 0, dayP = 0, dayC = 0, dayF = 0;
+            
+            Object.keys(dayMeals).forEach(idx => {
+                dayCals += MACROS_PER_ITEM[idx].kcal;
+                dayP += MACROS_PER_ITEM[idx].p;
+                dayC += MACROS_PER_ITEM[idx].c;
+                dayF += MACROS_PER_ITEM[idx].f;
+            });
+
+            document.getElementById('day-completed').textContent = window.dayComplete[today] ? 'Sim ✓' : 'Não';
+            document.getElementById('day-calories').textContent = dayCals;
+            document.getElementById('day-trained').textContent = window.trainingData[today] ? 'Sim ✓' : 'Não';
+
+            document.getElementById('day-protein').textContent = dayP + 'g / 195g';
+            document.getElementById('day-protein-bar').style.width = Math.min(100, (dayP / 195) * 100) + '%';
+
+            document.getElementById('day-carb').textContent = dayC + 'g / 245g';
+            document.getElementById('day-carb-bar').style.width = Math.min(100, (dayC / 245) * 100) + '%';
+
+            document.getElementById('day-fat').textContent = dayF + 'g / 63g';
+            document.getElementById('day-fat-bar').style.width = Math.min(100, (dayF / 63) * 100) + '%';
+
+            const dayFeedback = document.getElementById('day-feedback');
+            dayFeedback.innerHTML = '';
+            if (window.dayComplete[today] && window.trainingData[today]) {
+                dayFeedback.innerHTML += '<div class="feedback-box"><div class="feedback-title">🎯 Excelente!</div><div class="feedback-text">Você completou o dia perfeitamente e treinou! Continue assim!</div></div>';
+            } else if (window.dayComplete[today]) {
+                dayFeedback.innerHTML += '<div class="feedback-box"><div class="feedback-title">✅ Bom dia!</div><div class="feedback-text">Você completou todas as refeições! Que tal treinar também?</div></div>';
+            } else if (window.trainingData[today]) {
+                dayFeedback.innerHTML += '<div class="feedback-box"><div class="feedback-title">💪 Treinou!</div><div class="feedback-text">Ótimo! Agora complete suas refeições para maximizar os resultados.</div></div>';
+            } else {
+                dayFeedback.innerHTML += '<div class="feedback-box"><div class="feedback-title">💡 Dica</div><div class="feedback-text">Você ainda não completou o dia. Marque suas refeições!</div></div>';
+            }
+
+            // Semana
+            const last7Days = getLast7Days();
+            let weekCompleted = 0, weekTrained = 0, weekCals = 0;
+            let weekP = 0, weekC = 0, weekF = 0;
+
+            last7Days.forEach(date => {
+                if (window.dayComplete[date]) weekCompleted++;
+                if (window.trainingData[date]) weekTrained++;
+
+                const dayData = window.mealsData[date] || {};
+                Object.keys(dayData).forEach(idx => {
+                    weekCals += MACROS_PER_ITEM[idx].kcal;
+                    weekP += MACROS_PER_ITEM[idx].p;
+                    weekC += MACROS_PER_ITEM[idx].c;
+                    weekF += MACROS_PER_ITEM[idx].f;
+                });
+            });
+
+            document.getElementById('week-completed').textContent = `${weekCompleted}/7`;
+            document.getElementById('week-trained').textContent = `${weekTrained}/21`;
+            document.getElementById('week-avg-cal').textContent = Math.round(weekCals / 7);
+
+            document.getElementById('week-protein').textContent = weekP + 'g';
+            document.getElementById('week-protein-bar').style.width = Math.min(100, (weekP / (195 * 7)) * 100) + '%';
+
+            document.getElementById('week-carb').textContent = weekC + 'g';
+            document.getElementById('week-carb-bar').style.width = Math.min(100, (weekC / (245 * 7)) * 100) + '%';
+
+            document.getElementById('week-fat').textContent = weekF + 'g';
+            document.getElementById('week-fat-bar').style.width = Math.min(100, (weekF / (63 * 7)) * 100) + '%';
+
+            // Histórico semana
+            const historyHtml = last7Days.map(date => {
+                const dayName = new Date(date).toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit' });
+                const isCompleted = window.dayComplete[date] ? '✓' : '✗';
+                const trained = window.trainingData[date] ? '💪' : '-';
+                return `<div style="padding: 8px; background: var(--dark); border-radius: 4px; display: flex; justify-content: space-between;">
+                    <span>${dayName}</span>
+                    <span>Dieta: ${isCompleted} | Treino: ${trained}</span>
+                </div>`;
+            }).join('');
+            document.getElementById('week-history').innerHTML = historyHtml;
+
+            const weekFeedback = document.getElementById('week-feedback');
+            weekFeedback.innerHTML = '';
+            if (weekCompleted >= 6) {
+                weekFeedback.innerHTML += `<div class="feedback-box"><div class="feedback-title">🏆 Incrível!</div><div class="feedback-text">Você completou ${weekCompleted} de 7 dias! Esse é o ritmo! Próxima semana: tudo perfeito!</div></div>`;
+            } else if (weekCompleted >= 4) {
+                weekFeedback.innerHTML += `<div class="feedback-box"><div class="feedback-title">👍 Bom progresso</div><div class="feedback-text">Você completou ${weekCompleted} dias. Tente completar 2-3 a mais na próxima semana!</div></div>`;
+            } else {
+                weekFeedback.innerHTML += `<div class="feedback-box"><div class="feedback-title">💪 Você consegue!</div><div class="feedback-text">Esse é um bom começo (${weekCompleted} dias). Foque em consistência na próxima semana!</div></div>`;
+            }
+
+            // Mês
+            const last30Days = getLast30Days();
+            let monthCompleted = 0, monthTrained = 0, monthCals = 0;
+            let monthP = 0, monthC = 0, monthF = 0;
+
+            last30Days.forEach(date => {
+                if (window.dayComplete[date]) monthCompleted++;
+                if (window.trainingData[date]) monthTrained++;
+
+                const dayData = window.mealsData[date] || {};
+                Object.keys(dayData).forEach(idx => {
+                    monthCals += MACROS_PER_ITEM[idx].kcal;
+                    monthP += MACROS_PER_ITEM[idx].p;
+                    monthC += MACROS_PER_ITEM[idx].c;
+                    monthF += MACROS_PER_ITEM[idx].f;
+                });
+            });
+
+            document.getElementById('month-completed').textContent = `${monthCompleted}/30`;
+            document.getElementById('month-trained').textContent = `${monthTrained}/90`;
+            document.getElementById('month-avg-cal').textContent = Math.round(monthCals / 30);
+
+            document.getElementById('month-protein').textContent = monthP + 'g';
+            document.getElementById('month-protein-bar').style.width = Math.min(100, (monthP / (195 * 30)) * 100) + '%';
+
+            document.getElementById('month-carb').textContent = monthC + 'g';
+            document.getElementById('month-carb-bar').style.width = Math.min(100, (monthC / (245 * 30)) * 100) + '%';
+
+            document.getElementById('month-fat').textContent = monthF + 'g';
+            document.getElementById('month-fat-bar').style.width = Math.min(100, (monthF / (63 * 30)) * 100) + '%';
+
+            const monthFeedback = document.getElementById('month-feedback');
+            monthFeedback.innerHTML = '';
+            if (monthCompleted >= 25) {
+                monthFeedback.innerHTML += `<div class="feedback-box"><div class="feedback-title">🌟 Extraordinário!</div><div class="feedback-text">Você completou ${monthCompleted} de 30 dias! Você é uma máquina! Próximo mês: surpasse esse número!</div></div>`;
+            } else if (monthCompleted >= 15) {
+                monthFeedback.innerHTML += `<div class="feedback-box"><div class="feedback-title">💯 Ótimo trabalho</div><div class="feedback-text">${monthCompleted} dias completos! Você está criando hábitos. Continue!</div></div>`;
+            } else {
+                monthFeedback.innerHTML += `<div class="feedback-box"><div class="feedback-title">🚀 Começando bem</div><div class="feedback-text">${monthCompleted} dias — esse é o início de uma jornada incrível!</div></div>`;
+            }
+        }
+
+        function getLast7Days() {
+            const days = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                days.push(d.toISOString().split('T')[0]);
+            }
+            return days;
+        }
+
+        function getLast30Days() {
+            const days = [];
+            for (let i = 29; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                days.push(d.toISOString().split('T')[0]);
+            }
+            return days;
+        }
+
+        // ===== PESO =====
+        function addWeight() {
+            const weight = parseFloat(document.getElementById('weight-input').value);
+            const dateInput = document.getElementById('weight-date').value;
+            const date = dateInput || getToday();
+
+            if (!weight || weight <= 0) {
+                alert('Digite um peso válido');
+                return;
+            }
+
+            window.weightsData[date] = weight;
+            saveData();
+
+            document.getElementById('weight-input').value = '';
+            document.getElementById('weight-date').value = '';
+            updateWeightDisplay();
+        }
+
+        function updateWeightDisplay() {
+            const sorted = Object.entries(window.weightsData || {}).sort((a, b) => new Date(b[0]) - new Date(a[0]));
+            const container = document.getElementById('weight-history');
+
+            if (sorted.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">Nenhum registro ainda</p>';
+                return;
+            }
+
+            container.innerHTML = sorted.map((entry, idx) => {
+                const [date, weight] = entry;
+                const nextWeight = sorted[idx + 1]?.[1];
+                const change = nextWeight ? (weight - nextWeight).toFixed(1) : 0;
+                const changeText = change > 0 ? `↓ ${change}kg` : (change < 0 ? `↑ ${Math.abs(change)}kg` : 'Primeira');
+                const dateObj = new Date(date + 'T00:00:00');
+                const formatted = dateObj.toLocaleDateString('pt-BR', { weekday: 'short', month: 'short', day: 'numeric' });
+
+                return `<div style="display: flex; justify-content: space-between; padding: 12px; background: var(--dark); border-radius: 6px; border-left: 3px solid var(--primary);">
+                    <div><div style="font-size: 18px; font-weight: 600; color: var(--primary);">${weight}kg</div><div style="font-size: 12px; color: var(--text-secondary);">${formatted}</div></div>
+                    <div style="font-size: 12px; color: var(--success);">${changeText}</div>
+                </div>`;
+            }).join('');
+        }
+
+        // ===== NOTAS =====
+        function addNote() {
+            const text = document.getElementById('note-input').value;
+            if (!text.trim()) {
+                alert('Escreva algo!');
+                return;
+            }
+
+            const date = getToday();
+            if (!window.notesData[date]) {
+                window.notesData[date] = [];
+            }
+
+            window.notesData[date].push({
+                text,
+                timestamp: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+            });
+
+            saveData();
+            document.getElementById('note-input').value = '';
+            updateNotesDisplay();
+        }
+
+        function updateNotesDisplay() {
+            const today = getToday();
+            const notes = window.notesData[today] || [];
+            const container = document.getElementById('notes-list');
+
+            if (notes.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">Nenhuma nota ainda</p>';
+                return;
+            }
+
+            container.innerHTML = notes.reverse().map(note => `
+                <div style="padding: 8px; background: var(--dark); border-radius: 4px; border-left: 2px solid var(--primary);">
+                    <strong style="font-size: 12px; color: var(--text-secondary);">${note.timestamp}</strong><br>
+                    ${note.text}
+                </div>
+            `).join('');
+        }
+
+        // ===== INIT =====
         loadData();
     </script>
 </body>
